@@ -45,6 +45,9 @@ class _KickOverridePluginIE(KickIE, plugin_name='kickvodpage'):
         channel_name = match.groupdict()["channel_name"]
         response = self._call_api(f'v2/channels/{channel_name}/videos', None)
         
+        if self._configuration_arg('only_latest_stream', ['false', 'true'], ie_key='KickVodPage')[0] == 'true':
+            return self._create_format( response[0]['video']['uuid'] )
+
         # the v2/channels response is missing a lot of data that's in the v1
         # response, but it notably includes the real video id (the uuid used in
         # urls), so we combine the two (in the sense that the entire v2 response
